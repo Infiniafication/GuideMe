@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_g"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" 
+    android:orientation="vertical">
+
+   
+	
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+	    <ImageView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:adjustViewBounds="true"
+	        android:layout_gravity="center"
+	        android:maxHeight="250dp"
+	        android:maxWidth="250dp"
+	        android:src="@drawable/_logo" />
+
+	</LinearLayout>
+	<LinearLayout
+	    android:layout_marginTop="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+	     <ImageButton
+	         android:id="@+id/actMain_imBtn_map"
+	         android:layout_width="350dp"
+	         android:layout_height="110dp"
+				android:layout_marginRight="100dp"
+	         android:scaleType="centerInside"
+	         android:layout_weight="50"
+	         android:src="@drawable/tape_w_icon" 
+	         />
+		
+	      <ImageButton
+	          android:id="@+id/actMain_imBtn_cat"
+	         android:layout_width="350dp"
+	         android:layout_height="110dp"
+				android:layout_marginRight="100dp"
+	         android:scaleType="centerInside"
+	         android:layout_weight="50"
+	          android:src="@drawable/tape_w_icon2" />
+		
+	</LinearLayout>
+</LinearLayout>

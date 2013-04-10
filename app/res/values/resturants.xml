@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name = "resturants">
+        <item>Little Lebanon</item> 
+		<item>James Brooks </item>
+		<item>Lau Ya Keng</item>
+		<item>Life Café</item>
+		<item>On Top Lounge </item>
+		<item>Kuching Station</item>
+		<item>Station One Leisure Café</item>
+		<item>The Junk Restaurant </item>
+		<item>Green Hill Cornor</item>
+		<item>John\'s place</item>
+		<item>Tumis</item>
+		<item>Tribal Stove</item>
+		<item>Carvery</item> 
+		<item>Sanga</item> 
+		<item>RJ Ayam Bakar</item>
+		<item>The Den Restaurant</item> 
+		<item>John\'s Pie</item>
+		<item>Middle East Restaurant</item> 
+		<item>SCR-Singapore Chicken Rice</item>
+		<item>Chinese Barbecue Specialist</item> 
+		<item>MAHARAJAH Cuisine </item>
+		<item>Popular Vegetarian Restaurant</item>
+		<item>Khatulistiwa Cafe RestaurantJalan Tunku Abdul Rahman, Kuching, Malaysia</item> 
+		<item>Top Spot Food court</item>
+		<item>McDonald\'s Kuching</item>        
+    </string-array>
+</resources>

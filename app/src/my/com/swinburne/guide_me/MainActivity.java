@@ -1,4 +1,4 @@
-package eshan.shafeeq.swinburne.guideme;
+package my.com.swinburne.guide_me;
 
 import android.os.Bundle;
 import android.app.Activity;

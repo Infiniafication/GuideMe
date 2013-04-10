@@ -1,4 +1,4 @@
-package eshan.shafeeq.swinburne.guideme;
+package my.com.swinburne.guide_me;
 
 import java.io.IOException;
 import java.io.StringReader;

@@ -23,10 +23,8 @@ import org.xml.sax.SAXException;
 
 import android.util.Log;
 
-public class XMLPraser {
-	public XMLPraser(){
-		
-	}
+public class XMLParser {
+	
 	//Get the xml file from the provided URL
 	public String getXmlFromUrl(String url) {
         String xml = null;

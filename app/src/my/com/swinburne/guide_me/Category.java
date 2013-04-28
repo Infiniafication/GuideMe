@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,21 +29,14 @@ public class Category extends ListActivity{
 	static final String KEY_URL = "url";
 	
 	private ArrayList<HashMap<String, String>> categories;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getDataFromInternet();
-		Init();
-		
+		categories = new ArrayList<HashMap<String, String>>();
+		new DownloadXMLTask().execute(URL);		
 	}
-	private void Init() {
-		String [] list = new String[categories.size()] ;
-		for(int i =0 ; i < categories.size(); i++){
-			list[i] = new String(categories.get(i).get(KEY_NAME).toString());
-		}
-		this.setListAdapter(new CategoryList(getApplicationContext(), R.layout.category, list));
-		
-	}
+	
 
     @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -51,28 +45,6 @@ public class Category extends ListActivity{
     	i.putExtra("url", categories.get(position).get(KEY_URL));
     	startActivity(i);
     }
-	private void getDataFromInternet() {
-		try{
-			categories = new ArrayList<HashMap<String, String>>();
-			XMLPraser praser = new XMLPraser();
-			String xml = praser.getXmlFromUrl(URL);
-			Document doc = praser.getDomElement(xml);
-			NodeList nodes = doc.getElementsByTagName(KEY_ITEM);
-			for(int i = 0; i < nodes.getLength(); i++){
-			
-				HashMap<String, String> urlObject = new HashMap<String, String>();
-				Element el = (Element) nodes.item(i);
-			
-				urlObject.put(KEY_NAME, praser.getValue(el, KEY_NAME));
-				urlObject.put(KEY_URL, praser.getValue(el, KEY_URL));
-			
-				categories.add(new HashMap<String, String>(urlObject));
-			}
-		}catch(Exception e){
-			Log.d("LOL", e.toString());
-		}
-		
-	}
 	
 	public class CategoryList extends ArrayAdapter<String> {
 		
@@ -102,11 +74,55 @@ public class Category extends ListActivity{
 			label.setText(name);
 			if(position <= icons.length-1)
 				icon.setImageDrawable(getResources().getDrawable(icons[position]));
-			//label.setText("Lol");
 			else
 				icon.setImageDrawable(getResources().getDrawable(icons[icons.length]));
 			
 			return row;
+		}
+	}
+	
+	private class DownloadXMLTask extends AsyncTask<String, Void, Document> {
+
+		@Override
+		protected Document doInBackground(String... params) {
+			String url = params[0];
+			String xml = "";
+			Document doc = null;
+			try {
+			XMLParser parser = new XMLParser();
+			xml = parser.getXmlFromUrl(url);
+			doc = parser.getDomElement(xml);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return doc;
+		}
+		
+		@Override
+		protected void onPostExecute(Document result)
+		{
+			XMLParser parser = new XMLParser();
+			NodeList nodes = result.getElementsByTagName(KEY_ITEM);
+			for(int i = 0; i < nodes.getLength(); i++){
+				
+				HashMap<String, String> urlObject = new HashMap<String, String>();
+				Element el = (Element) nodes.item(i);
+				urlObject.put(KEY_NAME, parser.getValue(el, KEY_NAME));
+				urlObject.put(KEY_URL, parser.getValue(el, KEY_URL));
+				
+				categories.add(new HashMap<String, String>(urlObject));
+				Init();
+			}
+		}
+		
+		private void Init() {
+			String [] list = new String[categories.size()] ;
+			for(int i =0 ; i < categories.size(); i++){
+				list[i] = new String(categories.get(i).get(KEY_NAME).toString());
+			}
+			setListAdapter(new CategoryList(getApplicationContext(), R.layout.category, list));
 		}
 	}
 	

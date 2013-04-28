@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,9 +46,7 @@ public class SubCategory extends ListActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		init();
-		retrieveData();
-		
-		setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, objects));
+		new DownloadXMLTask().execute(URL);
 	}
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -110,46 +109,17 @@ public class SubCategory extends ListActivity{
     	startActivity(i);
 
     }
-	private void retrieveData() {
-		XMLPraser parser = new XMLPraser();
-		String xml = parser.getXmlFromUrl(URL);
-		Document doc = parser.getDomElement(xml);
-		
-		NodeList nl = doc.getElementsByTagName(KEY_ITEM);
-		
-		for(int i = 0; i < nl.getLength(); i++){
-			HashMap<String, String> map = new HashMap<String, String>();
-			Element e = (Element) nl.item(i);
-			map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
-			map.put(KEY_LOC, parser.getValue(e, KEY_LOC));
-			map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
-			map.put(KEY_PRICE, parser.getValue(e, KEY_PRICE));
-			map.put(KEY_OPEN, parser.getValue(e, KEY_OPEN));
-			map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
-			map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
-			map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
-			Log.d("LOL", parser.getValue(e, KEY_NAME));
-			subcats.add(map);
-		}
-		objects = new String[subcats.size()];
-		for(int i = 0; i < subcats.size(); i++){
-			objects[i] = subcats.get(i).get(KEY_NAME);
-			Log.d("LOL", objects[i]);
-		}
-		
-	}
 
 	private void init() {
 		Intent i = getIntent();
-		Name = i.getStringExtra(KEY_NAME);
+		this.Name = i.getStringExtra(KEY_NAME);
 		URL = i.getStringExtra(KEY_URL);
 		subcats = new ArrayList<HashMap<String,String>>();
 		
 	}
 	public class SubCategoryList extends ArrayAdapter<String> {
 		int rand;
-		public SubCategoryList(Context context, int textViewResourceId,
-				String[] objects) {
+		public SubCategoryList(Context context, int textViewResourceId,	String[] objects) {
 			super(context, textViewResourceId, objects);
 			rand = 0;
 			
@@ -177,4 +147,45 @@ public class SubCategory extends ListActivity{
 		}
 	}
 	
+	private class DownloadXMLTask extends AsyncTask<String, Void, Document> {
+
+		@Override
+		protected Document doInBackground(String... params) {
+			XMLParser parser = new XMLParser();
+			String xml = parser.getXmlFromUrl(params[0]);
+			Document doc = parser.getDomElement(xml);
+			
+			return doc;
+		}
+		
+		@Override
+		protected void onPostExecute(Document result)
+		{
+			XMLParser parser = new XMLParser();
+			NodeList nl = result.getElementsByTagName(KEY_ITEM);
+			
+			for(int i = 0; i < nl.getLength(); i++){
+				HashMap<String, String> map = new HashMap<String, String>();
+				Element e = (Element) nl.item(i);
+				map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
+				map.put(KEY_LOC, parser.getValue(e, KEY_LOC));
+				map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
+				map.put(KEY_PRICE, parser.getValue(e, KEY_PRICE));
+				map.put(KEY_OPEN, parser.getValue(e, KEY_OPEN));
+				map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
+				map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
+				map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
+				Log.i("LOL", parser.getValue(e, KEY_NAME));
+				subcats.add(map);
+			}
+			objects = new String[subcats.size()];
+			for(int i = 0; i < subcats.size(); i++){
+				objects[i] = subcats.get(i).get(KEY_NAME);
+				Log.i("LOL", objects[i]);
+			}
+			
+			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, objects));
+		}
+		
+	}
 }

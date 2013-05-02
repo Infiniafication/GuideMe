@@ -1,12 +1,12 @@
 package my.com.swinburne.guide_me;
 
-
-
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,29 +17,117 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class Maps extends FragmentActivity{
+public class Maps extends Activity{
+
+	private GoogleMap map;
+	private static final LatLng PADANG_MERDEKA = new LatLng(1.55794,110.34434);
+
+	private ViewGroup infoWindow;
+    private TextView infoTitle;
+    private TextView infoSnippet;
+    private Button infoButton;
+    private OnInfoWindowElemTouchListener infoButtonListener;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.map);
-		GoogleMap map = ((SupportMapFragment)  getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+		setContentView(R.layout.map_relative_layout);
+		// GoogleMap map = ((SupportMapFragment)  getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		
+		final MapWrapperLayout mapWrapperLayout = (MapWrapperLayout)findViewById(R.id.map_relative_layout);
+		initMap();
+
+		// MapWrapperLayout initialization
+        // 39 - default marker height
+        // 20 - offset between the default InfoWindow bottom edge and it's content bottom edge 
+        mapWrapperLayout.init(map, getPixelsFromDp(this, 39 + 20));
+
+        // We want to reuse the info window for all the markers, 
+        // so let's create only one class member instance
+        this.infoWindow = (ViewGroup)getLayoutInflater().inflate(R.layout.info_window, null);
+        this.infoTitle = (TextView)infoWindow.findViewById(R.id.title);
+        this.infoSnippet = (TextView)infoWindow.findViewById(R.id.snippet);
+        this.infoButton = (Button)infoWindow.findViewById(R.id.button);
+
+        // Setting custom OnTouchListener which deals with the pressed state
+        // so it shows up 
+        this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton,
+                getResources().getDrawable(R.drawable.btn_default_normal_holo_light),
+                getResources().getDrawable(R.drawable.btn_default_pressed_holo_light)) 
+        {
+            @Override
+            protected void onClickConfirmed(View v, Marker marker) {
+                // Here we can perform some action triggered after clicking the button
+                Toast.makeText(Maps.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
+            }
+        }; 
+        this.infoButton.setOnTouchListener(infoButtonListener);
+
+
+        map.setInfoWindowAdapter(new InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                // Setting up the infoWindow with current's marker info
+                infoTitle.setText(marker.getTitle());
+                infoSnippet.setText(marker.getSnippet());
+                infoButtonListener.setMarker(marker);
+
+                // We must call this to set the current marker and infoWindow references
+                // to the MapWrapperLayout
+                mapWrapperLayout.setMarkerWithInfoWindow(marker, infoWindow);
+                return infoWindow;
+            }
+        });
+
+        // Start GPS code
 		GPSTracker gps = new GPSTracker(this);
-		 
         // check if GPS location can get
         if (gps.canGetLocation()) {
             Log.d("Your Location", "latitude:" + gps.getLatitude() + ", longitude: " + gps.getLongitude());
         } else {
-        	 Log.d("Your Location", "Unavailable");
+        	Log.d("Your Location", "Unavailable");
         }
         gps.getLocation();
 		map.addMarker(new MarkerOptions().position(new LatLng(gps.getLatitude() , gps.getLongitude())).title("Marker"));
+		
 		map.setMyLocationEnabled(true);
 	}
+
+	private void initMap() {
+		if (map == null) {
+			map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+			if(map != null) {
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(PADANG_MERDEKA, 14));
+				map.animateCamera(CameraUpdateFactory.zoomIn());
+				
+				map.addMarker(new MarkerOptions().position(new LatLng(1.558992, 110.344761)).title("Little Lebanon").snippet("Address: 49 Wayang Street 93000 Kuching, Sarawak"));
+				map.addMarker(new MarkerOptions().position(new LatLng(1.557496, 110.349356)).title("James Brooks").snippet("Address: Jalan Tunku Abdul Rahman, 93100 Kuching, Sarawak"));
+				map.addMarker(new MarkerOptions().position(new LatLng(1.558582, 110.34555)).title("Lau Ya Keng").snippet("Address: Carpenter St. 93300 Kuching, Sarawak"));
+				map.addMarker(new MarkerOptions().position(new LatLng(1.557624, 110.347819)).title("Life Café").snippet("Address: Brighton Square Kuching, Sarawak"));
+				map.addMarker(new MarkerOptions().position(new LatLng(1.559909, 110.345981)).title("On Top Lounge").snippet("Address: Level 4, Taman Letak Kereta, Jalan Bukit Mata Kucing, Kuching, Sarawak"));
+			}
+		}
+	}
+
+	public static int getPixelsFromDp(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dp * scale + 0.5f);
+    }
+
 	public final class GPSTracker implements LocationListener {
 
 		private final Context mContext;
@@ -145,7 +233,6 @@ public class Maps extends FragmentActivity{
 		        latitude = location.getLatitude();
 		    }
 
-		    // return latitude
 		    return latitude;
 		}
 
@@ -154,7 +241,6 @@ public class Maps extends FragmentActivity{
 		        longitude = location.getLongitude();
 		    }
 
-		    // return longitude
 		    return longitude;
 		}
 
@@ -166,7 +252,7 @@ public class Maps extends FragmentActivity{
 		    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
 		    // Setting Dialog Title
-		    alertDialog.setTitle("GPS is settings");
+		    alertDialog.setTitle("GPS Settings");
 
 		    // Setting Dialog Message
 		    alertDialog
@@ -209,6 +295,6 @@ public class Maps extends FragmentActivity{
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
+	}
 
-		 }
 }

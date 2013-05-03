@@ -2,34 +2,30 @@ package my.com.swinburne.guide_me;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
-public class SubCategory extends ListActivity{
+public class SearchableActivity extends ListActivity {
+	
 	private static final String KEY_ITEM = "item"; // parent node
 	private static final String KEY_NAME = "Name";
-	private static final String KEY_URL = "url";
 	private static final String KEY_LOC ="Location";
 	private static final String KEY_DESC ="Description";
 	private static final String KEY_PRICE ="Pricerange";
@@ -39,105 +35,42 @@ public class SubCategory extends ListActivity{
 	private static final String KEY_LAT ="Latitude";
 	private static final String KEY_WEB ="Website";
 	private static final String KEY_EMAIL ="Email";
-	
-	private String URL = "";
+	static final String URL = "http://diehardofdeath.net16.net/PlazaMadeka/url.xml";
+
 	private String Name = "";
 	private ArrayList<HashMap<String, String>> subcats;
 	private String [] objects;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
+		Intent intent = getIntent();
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	      String query = intent.getStringExtra(SearchManager.QUERY);
+	      doMySearch(query);
+	    }
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.searchable, menu);
+		return true;
+	}
+	
+	private void doMySearch(String query)
+	{
 		init();
 		new DownloadXMLTask().execute(URL);
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		 // Inflate the options menu from XML
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.options_menu, menu);
-
-	    // Get the SearchView and set the searchable configuration
-	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-	    // Assumes current activity is the searchable activity
-	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
-	    return true;
-	}
-	
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-    	Intent i = new Intent(getApplicationContext(), Details.class);
-    	ArrayList<String> info = new ArrayList<String>();
-    	
-		try{
-			info.add(subcats.get(position).get(KEY_NAME).toString());
-		}catch(NullPointerException e){
-
-		}
-    	try{
-    		info.add(subcats.get(position).get(KEY_LOC).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_DESC).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_PRICE).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_OPEN).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_CONT).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_LONG).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_LAT).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_WEB).toString());
-    	}catch(NullPointerException e){
-
-    	}
-    	try{
-    		info.add(subcats.get(position).get(KEY_EMAIL).toString());
-    	}catch(NullPointerException e){
-
-    	}
-
-    	
-    	i.putStringArrayListExtra("info", info);
-    	startActivity(i);
-
-    }
-
 	private void init() {
 		Intent i = getIntent();
-		this.Name = i.getStringExtra(KEY_NAME);
-		URL = i.getStringExtra(KEY_URL);
 		subcats = new ArrayList<HashMap<String,String>>();
 		
 	}
+	
 	public class SubCategoryList extends ArrayAdapter<String> {
 		int rand;
 		public SubCategoryList(Context context, int textViewResourceId,	String[] objects) {

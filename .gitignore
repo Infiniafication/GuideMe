@@ -24,3 +24,7 @@ app/bin/res/drawable-xxhdpi/
 app/gen/
 app/gen/com/google/android/gms/
 app/gen/my/com/swinburne/plaza_merdeka/
+app/res/drawable-hdpi/
+app/res/drawable-mdpi/
+app/res/drawable-xhdpi/
+app/res/drawable-xxhdpi/

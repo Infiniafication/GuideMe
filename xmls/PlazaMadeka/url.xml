@@ -1,0 +1,42 @@
+<menu>
+	<item>
+		<Name>Restaurants</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/resturants.xml</url>
+
+	</item>
+	<item>
+		<Name>Accomodation</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/accomodation.xml</url>
+
+	</item>
+	<item>
+		<Name>Commercial Centers</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/commercial%20centers.xml</url>
+
+	</item>
+	<item>
+		<Name>Financial Institutions</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/Financial%20Institutions.xml</url>
+
+	</item>
+	<item>
+		<Name>Convenience Store</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/convenience%20store.xml</url>
+
+	</item>
+	<item>
+		<Name>Laundry Service</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/Laundry%20Service.xml</url>
+
+	</item>
+	<item>
+		<Name>Night Spots</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/nightspots.xml</url>
+
+	</item>
+	<item>
+		<Name>Tourist Attraction</Name>
+		<url>http://diehardofdeath.net16.net/PlazaMadeka/tourist%20attraction.xml</url>
+
+	</item>
+</menu>

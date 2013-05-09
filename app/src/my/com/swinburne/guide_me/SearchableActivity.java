@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+// TODO: DO a real proper algorithm of searching 
 public class SearchableActivity extends ListActivity {
 	
 	private static final String KEY_ITEM = "item"; // parent node
@@ -40,6 +40,7 @@ public class SearchableActivity extends ListActivity {
 	private String Name = "";
 	private ArrayList<HashMap<String, String>> subcats;
 	private String [] objects;
+	private String query;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,8 @@ public class SearchableActivity extends ListActivity {
 		
 		Intent intent = getIntent();
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	      String query = intent.getStringExtra(SearchManager.QUERY);
-	      doMySearch(query);
+	      this.query = intent.getStringExtra(SearchManager.QUERY);
+	      doMySearch();
 	    }
 	}
 
@@ -59,7 +60,7 @@ public class SearchableActivity extends ListActivity {
 		return true;
 	}
 	
-	private void doMySearch(String query)
+	private void doMySearch()
 	{
 		init();
 		new DownloadXMLTask().execute(URL);
@@ -67,6 +68,7 @@ public class SearchableActivity extends ListActivity {
 	
 	private void init() {
 		Intent i = getIntent();
+		this.setTitle("Search " + this.query);
 		subcats = new ArrayList<HashMap<String,String>>();
 		
 	}
@@ -91,7 +93,6 @@ public class SearchableActivity extends ListActivity {
 			View row = li.inflate(R.layout.main_cat_list_item, parent, false);
 			TextView label = (TextView)row. findViewById(R.id.main_cat_list_item_label);
 			ImageView icon = (ImageView)row. findViewById(R.id.main_cat_list_item_icon);
-			
 			
 			label.setText(subcats.get(position).get(KEY_NAME));
 			
@@ -129,13 +130,11 @@ public class SearchableActivity extends ListActivity {
 				map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
 				map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
 				map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
-				Log.i("LOL", parser.getValue(e, KEY_NAME));
 				subcats.add(map);
 			}
 			objects = new String[subcats.size()];
 			for(int i = 0; i < subcats.size(); i++){
 				objects[i] = subcats.get(i).get(KEY_NAME);
-				Log.i("LOL", objects[i]);
 			}
 			
 			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, objects));

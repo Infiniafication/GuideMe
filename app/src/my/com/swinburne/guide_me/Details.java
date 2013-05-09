@@ -11,25 +11,25 @@ public class Details extends Activity{
 	private TextView name, address, others;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		// TODO: Fix this after configuring the details.xml
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.details);
 		init();
 	}
 	private void init() {
-		name = (TextView) findViewById(R.id.details_name);
-		address = (TextView) findViewById(R.id.details_address);
-		others = (TextView) findViewById(R.id.details_others);
+		// name = (TextView) findViewById(R.id.details_name);
+		// address = (TextView) findViewById(R.id.details_address);
+		// others = (TextView) findViewById(R.id.details_others);
 		
-		Intent i = getIntent();
-		ArrayList<String> info = i.getStringArrayListExtra("info");
-		name.setText(info.get(0));
-		address.setText(info.get(1));
-		String g = "";
-		for(int j = 2; j < info.size(); j++){
-			g += info.get(j) + "\n";
-		}
-		others.setText(g);
+		// Intent i = getIntent();
+		// ArrayList<String> info = i.getStringArrayListExtra("info");
+		// name.setText(info.get(0));
+		// address.setText(info.get(1));
+		// String g = "";
+		// for(int j = 2; j < info.size(); j++){
+		// 	g += info.get(j) + "\n";
+		// }
+		// others.setText(g);
 	}
 
 }

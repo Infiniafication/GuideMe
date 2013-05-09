@@ -36,22 +36,23 @@
 
 	     <ImageButton
 	         android:id="@+id/actMain_imBtn_map"
-	         android:layout_width="350dp"
-	         android:layout_height="110dp"
-				android:layout_marginRight="100dp"
-	         android:scaleType="centerInside"
+	         android:layout_width="fill_parent"
+	         android:layout_height="fill_parent"
+	         android:layout_marginRight="0dp"
 	         android:layout_weight="50"
-	         android:src="@drawable/tape_w_icon" 
-	         />
+	         android:background="@null"
+	         android:scaleType="centerInside"
+	         android:src="@drawable/map_tape_banner" />
 		
 	      <ImageButton
 	          android:id="@+id/actMain_imBtn_cat"
-	         android:layout_width="350dp"
-	         android:layout_height="110dp"
-				android:layout_marginRight="100dp"
-	         android:scaleType="centerInside"
-	         android:layout_weight="50"
-	          android:src="@drawable/tape_w_icon2" />
+	          android:layout_width="fill_parent"
+	          android:layout_height="fill_parent"
+	          android:layout_marginRight="0dp"
+	          android:layout_weight="50"
+	          android:background="@null"
+	          android:scaleType="centerInside"
+	          android:src="@drawable/categories_tape_banner" />
 		
 	</LinearLayout>
 </LinearLayout>

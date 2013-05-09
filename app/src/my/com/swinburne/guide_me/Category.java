@@ -66,8 +66,8 @@ public class Category extends ListActivity{
     @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
     	Intent i = new Intent(getApplicationContext(), SubCategory.class);
-    	i.putExtra("name", categories.get(position).get(KEY_NAME));
-    	i.putExtra("url", categories.get(position).get(KEY_URL));
+    	i.putExtra(KEY_NAME, categories.get(position).get(KEY_NAME));
+    	i.putExtra(KEY_URL, categories.get(position).get(KEY_URL));
     	startActivity(i);
     }
 	

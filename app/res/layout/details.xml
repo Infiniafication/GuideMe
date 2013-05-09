@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- TODO: Beautify details page with proper android views  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/desc_guidelines"
     android:orientation="vertical" >
-	<LinearLayout 
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="0dp" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/desc_sample" />
+
+    </ScrollView>
+
+	<!-- <LinearLayout 
 	    android:layout_width="match_parent"
 	    android:layout_height="185dp"
 	    android:orientation="horizontal">
@@ -62,5 +77,5 @@
 	            android:textAppearance="?android:attr/textAppearanceSmall" />
 	        
 	    </ScrollView>
-	</LinearLayout>
+	</LinearLayout> -->
 </LinearLayout>

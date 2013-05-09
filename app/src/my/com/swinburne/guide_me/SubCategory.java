@@ -134,6 +134,7 @@ public class SubCategory extends ListActivity{
 	private void init() {
 		Intent i = getIntent();
 		this.Name = i.getStringExtra(KEY_NAME);
+		setTitle(this.Name);
 		URL = i.getStringExtra(KEY_URL);
 		subcats = new ArrayList<HashMap<String,String>>();
 		
@@ -196,13 +197,11 @@ public class SubCategory extends ListActivity{
 				map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
 				map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
 				map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
-				Log.i("LOL", parser.getValue(e, KEY_NAME));
 				subcats.add(map);
 			}
 			objects = new String[subcats.size()];
 			for(int i = 0; i < subcats.size(); i++){
 				objects[i] = subcats.get(i).get(KEY_NAME);
-				Log.i("LOL", objects[i]);
 			}
 			
 			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, objects));

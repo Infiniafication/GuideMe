@@ -21,6 +21,7 @@ public abstract class OnInfoWindowElemTouchListener implements OnTouchListener {
         this.view = view;
         this.bgDrawableNormal = bgDrawableNormal;
         this.bgDrawablePressed = bgDrawablePressed;
+        view.setBackgroundDrawable(bgDrawablePressed);
     }
 
     public void setMarker(Marker marker) {

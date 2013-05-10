@@ -20,10 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 // TODO: DO a real proper algorithm of searching 
 public class SearchableActivity extends ListActivity {
 	
+	
+
 	private static final String KEY_ITEM = "item"; // parent node
 	private static final String KEY_NAME = "Name";
 	private static final String KEY_LOC ="Location";
@@ -35,6 +38,12 @@ public class SearchableActivity extends ListActivity {
 	private static final String KEY_LAT ="Latitude";
 	private static final String KEY_WEB ="Website";
 	private static final String KEY_EMAIL ="Email";
+	
+	private static final String [] rest = {
+		"RJ Ayam Bakar",
+		"John's place",
+		"Green Hill Cornor"
+	};
 	static final String URL = "http://diehardofdeath.net16.net/PlazaMadeka/resturant.xml";
 
 	private String Name = "";
@@ -72,7 +81,19 @@ public class SearchableActivity extends ListActivity {
 		subcats = new ArrayList<HashMap<String,String>>();
 		
 	}
-	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		
+		super.onListItemClick(l, v, position, id);
+
+		Intent i = new Intent(getApplicationContext(), Details.class);
+		ArrayList<String> info = new ArrayList<String>();
+		info.add(rest[position]);
+		i.putStringArrayListExtra("info", info);
+		startActivity(i);
+		
+		
+	}
 	public class SubCategoryList extends ArrayAdapter<String> {
 		int rand;
 		public SubCategoryList(Context context, int textViewResourceId,	String[] objects) {
@@ -82,21 +103,15 @@ public class SearchableActivity extends ListActivity {
 		}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
-			final int icons [] = {
-					R.drawable.green,
-					R.drawable.red,
-					R.drawable.yellow
-			};
 			
-			rand = position % 3 ;
 			LayoutInflater li = getLayoutInflater();
 			View row = li.inflate(R.layout.main_cat_list_item, parent, false);
 			TextView label = (TextView)row. findViewById(R.id.main_cat_list_item_label);
 			ImageView icon = (ImageView)row. findViewById(R.id.main_cat_list_item_icon);
 			
-			label.setText(subcats.get(position).get(KEY_NAME));
+			label.setText(rest[position]);
 			
-			icon.setImageDrawable(getResources().getDrawable(icons[rand]));
+			icon.setImageDrawable(getResources().getDrawable(R.drawable.magnolia));
 			
 			return row;
 		}
@@ -116,29 +131,33 @@ public class SearchableActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Document result)
 		{
-			XMLParser parser = new XMLParser();
-			NodeList nl = result.getElementsByTagName(KEY_ITEM);
+			// FIXME: To make it proper search
+			// XMLParser parser = new XMLParser();
+			// NodeList nl = result.getElementsByTagName(KEY_ITEM);
 			
-			for(int i = 0; i < nl.getLength(); i++){
-				HashMap<String, String> map = new HashMap<String, String>();
-				Element e = (Element) nl.item(i);
-				map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
-				map.put(KEY_LOC, parser.getValue(e, KEY_LOC));
-				map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
-				map.put(KEY_PRICE, parser.getValue(e, KEY_PRICE));
-				map.put(KEY_OPEN, parser.getValue(e, KEY_OPEN));
-				map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
-				map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
-				map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
-				subcats.add(map);
-			}
-			objects = new String[subcats.size()];
-			for(int i = 0; i < subcats.size(); i++){
-				objects[i] = subcats.get(i).get(KEY_NAME);
-			}
+			// for(int i = 0; i < nl.getLength(); i++){
+			// 	HashMap<String, String> map = new HashMap<String, String>();
+			// 	Element e = (Element) nl.item(i);
+			// 	map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
+			// 	map.put(KEY_LOC, parser.getValue(e, KEY_LOC));
+			// 	map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
+			// 	map.put(KEY_PRICE, parser.getValue(e, KEY_PRICE));
+			// 	map.put(KEY_OPEN, parser.getValue(e, KEY_OPEN));
+			// 	map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
+			// 	map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
+			// 	map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
+			// 	subcats.add(map);
+			// }
+			// objects = new String[subcats.size()];
+			// for(int i = 0; i < subcats.size(); i++){
+			// 	objects[i] = subcats.get(i).get(KEY_NAME);
+			// }
+
+
 			
-			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, objects));
+			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, rest));
 		}
 		
 	}
+	
 }

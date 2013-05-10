@@ -73,59 +73,57 @@ public class SubCategory extends ListActivity{
 	protected void onListItemClick(ListView l, View v, int position, long id) {
     	Intent i = new Intent(getApplicationContext(), Details.class);
     	ArrayList<String> info = new ArrayList<String>();
-    	
 		try{
 			info.add(subcats.get(position).get(KEY_NAME).toString());
 		}catch(NullPointerException e){
-
+			Log.e("onListItemClick " + KEY_NAME, e.toString());
 		}
     	try{
     		info.add(subcats.get(position).get(KEY_LOC).toString());
     	}catch(NullPointerException e){
-
+			Log.e("onListItemClick " + KEY_LOC, e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_DESC).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick ", e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_PRICE).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick " + KEY_PRICE, e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_OPEN).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick " + KEY_OPEN, e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_CONT).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick " + KEY_CONT, e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_LONG).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick " + KEY_LONG, e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_LAT).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick " + KEY_LAT, e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_WEB).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick " + KEY_WEB, e.toString());
     	}
     	try{
     		info.add(subcats.get(position).get(KEY_EMAIL).toString());
     	}catch(NullPointerException e){
-
+    		Log.e("onListItemClick " + KEY_EMAIL, e.toString());
     	}
 
-    	
     	i.putStringArrayListExtra("info", info);
     	startActivity(i);
 
@@ -140,21 +138,12 @@ public class SubCategory extends ListActivity{
 		
 	}
 	public class SubCategoryList extends ArrayAdapter<String> {
-		int rand;
 		public SubCategoryList(Context context, int textViewResourceId,	String[] objects) {
 			super(context, textViewResourceId, objects);
-			rand = 0;
 			
 		}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
-			final int icons [] = {
-					R.drawable.green,
-					R.drawable.red,
-					R.drawable.yellow
-			};
-			
-			rand = position % 3 ;
 			LayoutInflater li = getLayoutInflater();
 			View row = li.inflate(R.layout.main_cat_list_item, parent, false);
 			TextView label = (TextView)row. findViewById(R.id.main_cat_list_item_label);
@@ -163,7 +152,7 @@ public class SubCategory extends ListActivity{
 			
 			label.setText(subcats.get(position).get(KEY_NAME));
 			
-			icon.setImageDrawable(getResources().getDrawable(icons[rand]));
+			icon.setImageDrawable(getResources().getDrawable(R.drawable.magnolia));
 			
 			return row;
 		}

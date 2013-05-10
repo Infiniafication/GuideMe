@@ -35,7 +35,7 @@ public class SearchableActivity extends ListActivity {
 	private static final String KEY_LAT ="Latitude";
 	private static final String KEY_WEB ="Website";
 	private static final String KEY_EMAIL ="Email";
-	static final String URL = "http://diehardofdeath.net16.net/PlazaMadeka/url.xml";
+	static final String URL = "http://diehardofdeath.net16.net/PlazaMadeka/resturant.xml";
 
 	private String Name = "";
 	private ArrayList<HashMap<String, String>> subcats;

@@ -1,5 +1,7 @@
 package my.com.swinburne.guide_me;
 
+import java.util.ArrayList;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -69,7 +71,7 @@ public class Maps extends Activity{
                 // Here we can perform some action triggered after clicking the button
                 Intent i = new Intent(getApplicationContext(), Details.class);
                 ArrayList<String> info = new ArrayList<String>();
-                info.add(this.infoTitle.getText());
+                info.add(infoTitle.getText().toString());
                 i.putStringArrayListExtra("info", info);
                 startActivity(i);
             }
@@ -129,6 +131,10 @@ public class Maps extends Activity{
 				map.addMarker(new MarkerOptions().position(new LatLng(1.558582, 110.34555)).title("Lau Ya Keng").snippet("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(270)));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.557624, 110.347819)).title("Life Café").snippet("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(270)));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.559909, 110.345981)).title("On Top Lounge").snippet("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(270)));
+				map.addMarker(new MarkerOptions().position(new LatLng(1.556327, 110.348281)).title("Green Hill Cornor").snippet("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(270)));
+				map.addMarker(new MarkerOptions().position(new LatLng(1.556370, 110.349468)).title("John's place").snippet("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(270)));
+				map.addMarker(new MarkerOptions().position(new LatLng(1.556895, 110.354870)).title("RJ Ayam Bakar").snippet("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(270)));
+				
 
 				map.addMarker(new MarkerOptions().position(new LatLng(1.556391, 110.343986)).title("Merdeka Palace Hotel").snippet("Accomodation").icon(BitmapDescriptorFactory.defaultMarker(328)));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.559276, 110.346153)).title("Kuching Waterfront Lodge").snippet("Accomodation").icon(BitmapDescriptorFactory.defaultMarker(328)));

@@ -67,7 +67,11 @@ public class Maps extends Activity{
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 // Here we can perform some action triggered after clicking the button
-                Toast.makeText(Maps.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), Details.class);
+                ArrayList<String> info = new ArrayList<String>();
+                info.add(this.infoTitle.getText());
+                i.putStringArrayListExtra("info", info);
+                startActivity(i);
             }
         }; 
         this.infoButton.setOnTouchListener(infoButtonListener);

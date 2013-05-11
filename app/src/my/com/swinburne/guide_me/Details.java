@@ -25,7 +25,8 @@ public class Details extends Activity{
 		// address = (TextView) findViewById(R.id.details_address);
 		// others = (TextView) findViewById(R.id.details_others);
 		
-		ImageButton imageView = (ImageButton) findViewById(R.id.imageView1);
+		ImageView imageView = (ImageView) findViewById(R.id.imageView1);
+		ImageButton map_btn = (ImageButton) findViewById(R.id.map_btn);
 
 		Intent i = getIntent();
 		ArrayList<String> info = i.getStringArrayListExtra("info");

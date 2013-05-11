@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -43,14 +44,16 @@ public class SubCategory extends ListActivity{
 	private String URL = "";
 	private String Name = "";
 	private ArrayList<HashMap<String, String>> subcats;
+	private ArrayList<String> info;
 	private String [] objects;
-	
+	private SearchView searchView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		init();
+		init();    	
 		new DownloadXMLTask().execute(URL);
+
 	}
 	
 	@Override
@@ -61,18 +64,27 @@ public class SubCategory extends ListActivity{
 
 	    // Get the SearchView and set the searchable configuration
 	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+	    searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 	    // Assumes current activity is the searchable activity
 	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+	    searchView.isSubmitButtonEnabled(true);
 	    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
+	    searchView.setOnSearchClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				searchView.setQuery(URL + "-" + searchView.getQuery(), false);
+	    		Log.i("SearchView", "" + searchView.getQuery());				
+			}
+		});
+	    
 	    return true;
 	}
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
     	Intent i = new Intent(getApplicationContext(), Details.class);
-    	ArrayList<String> info = new ArrayList<String>();
+    	info = new ArrayList<String>();
 		try{
 			info.add(subcats.get(position).get(KEY_NAME).toString());
 		}catch(NullPointerException e){
@@ -148,7 +160,6 @@ public class SubCategory extends ListActivity{
 			View row = li.inflate(R.layout.main_cat_list_item, parent, false);
 			TextView label = (TextView)row. findViewById(R.id.main_cat_list_item_label);
 			ImageView icon = (ImageView)row. findViewById(R.id.main_cat_list_item_icon);
-			
 			
 			label.setText(subcats.get(position).get(KEY_NAME));
 			

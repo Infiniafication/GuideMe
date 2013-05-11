@@ -50,16 +50,18 @@ public class SearchableActivity extends ListActivity {
 	private ArrayList<HashMap<String, String>> subcats;
 	private String [] objects;
 	private String query;
+	private ArrayList<String> info;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		Intent intent = getIntent();
-	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	      this.query = intent.getStringExtra(SearchManager.QUERY);
-	      doMySearch();
-	    }
+		handleIntent(getIntent());	    
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+		handleIntent(intent);
 	}
 
 	@Override
@@ -67,6 +69,15 @@ public class SearchableActivity extends ListActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.searchable, menu);
 		return true;
+	}
+
+	private void handleIntent(Intent intent)
+	{
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	      this.query = intent.getStringExtra(SearchManager.QUERY);
+	      Log.i("My query", this.query);
+	      doMySearch();
+	    }
 	}
 	
 	private void doMySearch()
@@ -77,9 +88,7 @@ public class SearchableActivity extends ListActivity {
 	
 	private void init() {
 		Intent i = getIntent();
-		this.setTitle("Search " + this.query);
-		subcats = new ArrayList<HashMap<String,String>>();
-		
+		subcats = new ArrayList<HashMap<String,String>>();		
 	}
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {

@@ -40,8 +40,8 @@ public class SubCategory extends ListActivity{
 	private static final String KEY_LAT ="Latitude";
 	private static final String KEY_WEB ="Website";
 	private static final String KEY_EMAIL ="Email";
-	
-	private String URL = "";
+	private static String URL = "";
+
 	private String Name = "";
 	private ArrayList<HashMap<String, String>> subcats;
 	private ArrayList<String> info;
@@ -49,13 +49,17 @@ public class SubCategory extends ListActivity{
 	private SearchView searchView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		init();    	
-		new DownloadXMLTask().execute(URL);
-
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		URL = getIntent().getStringExtra(KEY_URL);
+		new DownloadXMLTask().execute(this.URL);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		 // Inflate the options menu from XML
@@ -67,16 +71,8 @@ public class SubCategory extends ListActivity{
 	    searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 	    // Assumes current activity is the searchable activity
 	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	    searchView.isSubmitButtonEnabled(true);
+	    searchView.setSubmitButtonEnabled(true);
 	    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-	    searchView.setOnSearchClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				searchView.setQuery(URL + "-" + searchView.getQuery(), false);
-	    		Log.i("SearchView", "" + searchView.getQuery());				
-			}
-		});
 	    
 	    return true;
 	}
@@ -141,14 +137,19 @@ public class SubCategory extends ListActivity{
 
     }
 
+    public static String getURL()
+    {
+    	return SubCategory.URL;
+    }
+
 	private void init() {
 		Intent i = getIntent();
 		this.Name = i.getStringExtra(KEY_NAME);
 		setTitle(this.Name);
-		URL = i.getStringExtra(KEY_URL);
 		subcats = new ArrayList<HashMap<String,String>>();
 		
 	}
+
 	public class SubCategoryList extends ArrayAdapter<String> {
 		public SubCategoryList(Context context, int textViewResourceId,	String[] objects) {
 			super(context, textViewResourceId, objects);

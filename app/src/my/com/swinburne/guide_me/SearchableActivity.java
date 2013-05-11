@@ -39,16 +39,11 @@ public class SearchableActivity extends ListActivity {
 	private static final String KEY_WEB ="Website";
 	private static final String KEY_EMAIL ="Email";
 	
-	private static final String [] rest = {
-		"RJ Ayam Bakar",
-		"John's place",
-		"Green Hill Cornor"
-	};
-	static final String URL = "http://diehardofdeath.net16.net/PlazaMadeka/resturant.xml";
+	private String URL;
 
 	private String Name = "";
 	private ArrayList<HashMap<String, String>> subcats;
-	private String [] objects;
+	private String [] result;
 	private String query;
 	private ArrayList<String> info;
 	
@@ -73,9 +68,9 @@ public class SearchableActivity extends ListActivity {
 
 	private void handleIntent(Intent intent)
 	{
+		URL = SubCategory.getURL();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 	      this.query = intent.getStringExtra(SearchManager.QUERY);
-	      Log.i("My query", this.query);
 	      doMySearch();
 	    }
 	}
@@ -97,7 +92,7 @@ public class SearchableActivity extends ListActivity {
 
 		Intent i = new Intent(getApplicationContext(), Details.class);
 		ArrayList<String> info = new ArrayList<String>();
-		info.add(rest[position]);
+		info.add(result[position]);
 		i.putStringArrayListExtra("info", info);
 		startActivity(i);
 		
@@ -112,13 +107,12 @@ public class SearchableActivity extends ListActivity {
 		}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
-			
 			LayoutInflater li = getLayoutInflater();
 			View row = li.inflate(R.layout.main_cat_list_item, parent, false);
 			TextView label = (TextView)row. findViewById(R.id.main_cat_list_item_label);
 			ImageView icon = (ImageView)row. findViewById(R.id.main_cat_list_item_icon);
 			
-			label.setText(rest[position]);
+			label.setText(result[position]);
 			
 			icon.setImageDrawable(getResources().getDrawable(R.drawable.magnolia));
 			
@@ -126,47 +120,59 @@ public class SearchableActivity extends ListActivity {
 		}
 	}
 	
-	private class DownloadXMLTask extends AsyncTask<String, Void, Document> {
+	private class DownloadXMLTask extends AsyncTask<String, Void, String[]> {
 
 		@Override
-		protected Document doInBackground(String... params) {
+		protected String[] doInBackground(String... params) {
 			XMLParser parser = new XMLParser();
 			String xml = parser.getXmlFromUrl(params[0]);
 			Document doc = parser.getDomElement(xml);
 			
-			return doc;
+			NodeList nl = doc.getElementsByTagName(KEY_ITEM);
+			
+			for(int i = 0; i < nl.getLength(); i++){
+				HashMap<String, String> map = new HashMap<String, String>();
+				Element e = (Element) nl.item(i);
+				map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
+				map.put(KEY_LOC, parser.getValue(e, KEY_LOC));
+				map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
+				map.put(KEY_PRICE, parser.getValue(e, KEY_PRICE));
+				map.put(KEY_OPEN, parser.getValue(e, KEY_OPEN));
+				map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
+				map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
+				map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
+				subcats.add(map);
+			}
+
+			String searchList = "";
+			ArrayList<String> objects = new ArrayList<String>();
+			for(int i = 0; i < subcats.size(); i++){
+				searchList += subcats.get(i).get(KEY_NAME) + " ";
+				searchList += subcats.get(i).get(KEY_LOC) + " ";
+				searchList += subcats.get(i).get(KEY_DESC) + " ";
+
+				if (searchList.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+					Log.i("searchList", searchList.toLowerCase());
+					Log.i("query", query);
+					objects.add(subcats.get(i).get(KEY_NAME));
+					searchList = "";
+				}
+			}
+			
+			result = new String[objects.size()];
+
+			for (int i = 0; i < objects.size(); i++) {
+				result[i] = objects.get(i);
+			}
+
+			return result;
 		}
-		
+
 		@Override
-		protected void onPostExecute(Document result)
-		{
-			// FIXME: To make it proper search
-			// XMLParser parser = new XMLParser();
-			// NodeList nl = result.getElementsByTagName(KEY_ITEM);
-			
-			// for(int i = 0; i < nl.getLength(); i++){
-			// 	HashMap<String, String> map = new HashMap<String, String>();
-			// 	Element e = (Element) nl.item(i);
-			// 	map.put(KEY_NAME, parser.getValue(e, KEY_NAME));
-			// 	map.put(KEY_LOC, parser.getValue(e, KEY_LOC));
-			// 	map.put(KEY_DESC, parser.getValue(e, KEY_DESC));
-			// 	map.put(KEY_PRICE, parser.getValue(e, KEY_PRICE));
-			// 	map.put(KEY_OPEN, parser.getValue(e, KEY_OPEN));
-			// 	map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
-			// 	map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
-			// 	map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
-			// 	subcats.add(map);
-			// }
-			// objects = new String[subcats.size()];
-			// for(int i = 0; i < subcats.size(); i++){
-			// 	objects[i] = subcats.get(i).get(KEY_NAME);
-			// }
-
-
-			
-			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, rest));
+		protected void onPostExecute(String[] result)
+		{			
+			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, result));
 		}
 		
 	}
-	
 }

@@ -22,6 +22,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
+import android.widget.Toast;
 
 public class XMLParser {
 	
@@ -39,14 +40,16 @@ public class XMLParser {
             xml = EntityUtils.toString(httpEntity);
  
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.e("UnsupportedEncodingException", e.toString());
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            Log.e("ClientProtocolException", e.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("ClientProtocolException", e.toString());
         }
-        // return the XML
-        return xml;
+        finally {                
+            // return the XML
+            return xml;
+        }
     }
 	//Get the document element with the provided xml file
 	//For proper removal data

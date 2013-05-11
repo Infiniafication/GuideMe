@@ -32,12 +32,15 @@ public class Category extends ListActivity{
 	static final String KEY_URL = "url";
 	
 	private ArrayList<HashMap<String, String>> categories;
+	private boolean hasInternet = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		categories = new ArrayList<HashMap<String, String>>();
+		
 		new DownloadXMLTask().execute(URL);
+		
 	}
 	
 	@Override
@@ -92,30 +95,28 @@ public class Category extends ListActivity{
 		}
 	}
 	
-	private class DownloadXMLTask extends AsyncTask<String, Void, Document> {
+	private class DownloadXMLTask extends AsyncTask<String, Void, String[]> {
+		private String[] result = null;
 
 		@Override
-		protected Document doInBackground(String... params) {
+		protected String[] doInBackground(String... params) {
 			String url = params[0];
 			String xml = "";
 			Document doc = null;
-			try {
+			
 			XMLParser parser = new XMLParser();
 			xml = parser.getXmlFromUrl(url);
+
+			if (xml == null) {
+				cancel(false);
+				return result;
+			}
+			
+			hasInternet = true;
 			doc = parser.getDomElement(xml);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			return doc;
-		}
-		
-		@Override
-		protected void onPostExecute(Document result)
-		{
-			XMLParser parser = new XMLParser();
-			NodeList nodes = result.getElementsByTagName(KEY_ITEM);
+			
+			parser = new XMLParser();
+			NodeList nodes = doc.getElementsByTagName(KEY_ITEM);
 			for(int i = 0; i < nodes.getLength(); i++){
 				
 				HashMap<String, String> urlObject = new HashMap<String, String>();
@@ -124,16 +125,31 @@ public class Category extends ListActivity{
 				urlObject.put(KEY_URL, parser.getValue(el, KEY_URL));
 				
 				categories.add(new HashMap<String, String>(urlObject));
-				Init();
+			}
+
+			result = new String[categories.size()] ;
+			for(int i =0 ; i < categories.size(); i++){
+				result[i] = new String(categories.get(i).get(KEY_NAME).toString());
+			}
+
+			return result;
+		}
+		
+		@Override
+		protected void onCancelled(String[] result) {
+			Log.i("Cancelled", "ya");
+			if (result == null)
+			{
+				Toast toast = new Toast(getApplicationContext());
+				toast = Toast.makeText(getApplicationContext(), "Something went wrong with your network.", Toast.LENGTH_LONG);
+				toast.show();
 			}
 		}
 		
-		private void Init() {
-			String [] list = new String[categories.size()] ;
-			for(int i =0 ; i < categories.size(); i++){
-				list[i] = new String(categories.get(i).get(KEY_NAME).toString());
-			}
-			setListAdapter(new CategoryList(getApplicationContext(), R.layout.category, list));
+		@Override
+		protected void onPostExecute(String[] result)
+		{
+			setListAdapter(new CategoryList(getApplicationContext(), R.layout.category, result));
 		}
 	}
 	

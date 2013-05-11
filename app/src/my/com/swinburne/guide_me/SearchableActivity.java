@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 // TODO: DO a real proper algorithm of searching 
 public class SearchableActivity extends ListActivity {
 	
@@ -43,9 +44,10 @@ public class SearchableActivity extends ListActivity {
 
 	private String Name = "";
 	private ArrayList<HashMap<String, String>> subcats;
-	private String [] result;
+	private String [] result = null;
 	private String query;
 	private ArrayList<String> info;
+	private static Toast toast;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +128,13 @@ public class SearchableActivity extends ListActivity {
 		protected String[] doInBackground(String... params) {
 			XMLParser parser = new XMLParser();
 			String xml = parser.getXmlFromUrl(params[0]);
+
+			if (xml == null) {		
+				Toast toast = new Toast(getApplicationContext());
+				toast = Toast.makeText(getApplicationContext(), "Something went wrong with your network.", Toast.LENGTH_LONG);
+				toast.show();		
+				cancel(true);
+			}
 			Document doc = parser.getDomElement(xml);
 			
 			NodeList nl = doc.getElementsByTagName(KEY_ITEM);
@@ -151,9 +160,7 @@ public class SearchableActivity extends ListActivity {
 				searchList += subcats.get(i).get(KEY_LOC) + " ";
 				searchList += subcats.get(i).get(KEY_DESC) + " ";
 
-				if (searchList.toLowerCase().indexOf(query.toLowerCase()) != -1) {
-					Log.i("searchList", searchList.toLowerCase());
-					Log.i("query", query);
+				if (searchList.toLowerCase().trim().indexOf(query.toLowerCase().trim()) != -1) {
 					objects.add(subcats.get(i).get(KEY_NAME));
 					searchList = "";
 				}
@@ -170,7 +177,11 @@ public class SearchableActivity extends ListActivity {
 
 		@Override
 		protected void onPostExecute(String[] result)
-		{			
+		{
+			if (result == null) {
+				return;		
+			}		
+			
 			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, result));
 		}
 		

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ public class Details extends Activity{
 		// address = (TextView) findViewById(R.id.details_address);
 		// others = (TextView) findViewById(R.id.details_others);
 		
-		ImageView imageView = (ImageView) findViewById(R.id.imageView1);
+		ImageButton imageView = (ImageButton) findViewById(R.id.imageView1);
 
 		Intent i = getIntent();
 		ArrayList<String> info = i.getStringArrayListExtra("info");
@@ -32,13 +33,13 @@ public class Details extends Activity{
 		String name = info.get(0).trim();
 
 		if (name.equals("RJ Ayam Bakar")) {
-			imageView.setImageDrawable(getResources().getDrawable(R.drawable.ayam_bakar));
+			imageView.setImageDrawable(getResources().getDrawable(R.drawable.rj_ayam));
 		}
 		else if (name.equals("John's place")) {
-			imageView.setImageDrawable(getResources().getDrawable(R.drawable.laksa1));
+			imageView.setImageDrawable(getResources().getDrawable(R.drawable.johns_place));
 		}
 		else if (name.equals("Green Hill Cornor")) {
-			imageView.setImageDrawable(getResources().getDrawable(R.drawable.laksa2));
+			imageView.setImageDrawable(getResources().getDrawable(R.drawable.green_hill));
 		}
 
 		// address.setText(info.get(1));

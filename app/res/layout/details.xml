@@ -7,16 +7,137 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="0dp" >
+        android:layout_height="fill_parent" 
+        >
+     <RelativeLayout
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:background="@drawable/back_g"
+         >
+		<LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical" 
+	 			>
+	        
+		    <LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:orientation="horizontal"
+		        android:paddingLeft="5dp"
+		        android:layout_marginBottom="10dp">
+		
+		        <LinearLayout
+		            android:layout_width="100dp"
+		            android:layout_height="wrap_content"
+		            android:orientation="vertical"
+		            >
+		
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_marginTop="10dp"
+		                android:hint="Name"
+		                android:textStyle="italic" />
+		
+		            <TextView
+		                android:id="@+id/place_n"
+		                android:layout_width="100dp"
+		                android:layout_height="wrap_content"
+		                android:layout_marginLeft="12dp"
+		                android:text="Kuching Waterfront " />
+		
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:hint="Address"
+		                android:layout_marginTop="20dp"
+		                android:textStyle="italic" />
+		
+		            <TextView
+		                android:id="@+id/place_a"
+		                android:layout_width="100dp"
+		                android:layout_height="wrap_content"
+		                android:layout_marginLeft="12dp"
+		                android:text="@string/hello_world" />
+		            
+		        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/desc_sample" />
+		        <ImageButton
+		            android:id="@+id/imageView1"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:src="@drawable/mini_map" />
+		
+		        <ImageView
+		            android:id="@+id/img"
+		            android:layout_width="200dp"
+		            android:layout_height="150dp"
+		            android:layout_marginTop="0dp"
+		            android:src="@drawable/kuching_waterfront" 
+		            android:scaleType="fitXY"/>
+		        
+		    </LinearLayout>
+     
+	        <RelativeLayout
+	            android:layout_width="fill_parent"
+	            android:layout_height="51dp"
+	            android:background="@drawable/shed"
+	            android:orientation="horizontal"
+	            android:paddingTop="10dp"
+	            android:layout_marginBottom="10dp" >
 
+	        <ImageButton
+	            android:id="@+id/imgbtn"
+	            android:layout_width="40dp"
+	            android:layout_height="30dp"
+	            android:layout_alignParentTop="true"
+	            android:layout_centerHorizontal="true"
+	            android:src="@drawable/waterfront" />
+
+		    </RelativeLayout>
+		    <LinearLayout 
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
+		        android:orientation="vertical"
+		        android:paddingLeft="5dp">
+		   <TextView
+		       android:layout_height="wrap_content"
+		       android:layout_width="wrap_content"
+		       android:hint="Description"
+		       android:textStyle="italic"
+		       ></TextView>
+	
+		   <EditText
+		       android:id="@+id/editText1"
+		       android:layout_width="match_parent"
+		       android:layout_height="wrap_content"
+		       android:ems="10"
+		       android:inputType="textMultiLine" 
+		       android:editable="false"
+		       android:text="This place explains the description of this place.">
+	
+		   </EditText>
+	
+		   <TextView
+		       android:id="@+id/textView1"
+		       android:layout_width="wrap_content"
+		       android:layout_height="wrap_content"
+		       android:hint="Features" 
+		       android:textStyle="italic"
+		       android:layout_marginTop="10dp"/>
+	
+		   <EditText
+		       android:id="@+id/editText2"
+		       android:layout_width="match_parent"
+		       android:layout_height="wrap_content"
+		       android:editable="false"
+		       android:ems="10"
+		       android:inputType="textMultiLine"
+		       android:text="DFGHJKCVBNMERTYU GHJKLRTYUIOVBNMCVB DFGHJKLTYUIOVBNM&lt;>VBN DVBNMC TH" />
+			</LinearLayout>
+    	</LinearLayout>
+     </RelativeLayout>
     </ScrollView>
 
 	<!-- <LinearLayout 

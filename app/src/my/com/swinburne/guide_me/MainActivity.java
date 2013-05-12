@@ -38,6 +38,9 @@ public class MainActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Fix the orientation to be on potrait mode
+	 */
 	protected void setOrientation() {
 	    int current = getRequestedOrientation();
 	    // only switch the orientation if not in portrait

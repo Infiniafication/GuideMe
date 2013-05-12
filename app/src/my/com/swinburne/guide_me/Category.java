@@ -8,7 +8,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 import android.app.ListActivity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -25,22 +24,23 @@ import android.widget.TextView;
 
 public class Category extends ListActivity{
 	// All static variables
-	static final String URL = "http://diehardofdeath.net16.net/PlazaMadeka/url.xml";
+	// NOTE: This URL will change during actual production
+	private static final String URL = "http://diehardofdeath.net16.net/PlazaMadeka/url.xml";
 	// XML node keys
-	static final String KEY_ITEM = "item"; // parent node
-	static final String KEY_NAME = "Name";
-	static final String KEY_URL = "url";
+	private static final String KEY_ITEM = "item"; // parent node
+	private static final String KEY_NAME = "Name";
+	private static final String KEY_URL = "url";
 	
+	// An arrayList of hashmap. The keys are the category name and values are category xml URL
 	private ArrayList<HashMap<String, String>> categories;
-	private boolean hasInternet = false;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		categories = new ArrayList<HashMap<String, String>>();
-		
+
+		// This runs a new thread for network related task
 		new DownloadXMLTask().execute(URL);
-		
 	}
 	
 	@Override
@@ -52,6 +52,10 @@ public class Category extends ListActivity{
 	    return true;
 	}
 
+
+	/**
+	 * When a list item is clicked, it passes in the category name and URL to the next activity
+	 */
     @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
     	Intent i = new Intent(getApplicationContext(), SubCategory.class);
@@ -60,8 +64,12 @@ public class Category extends ListActivity{
     	startActivity(i);
     }
 	
+	/**
+	 * CategoryList defines the CustomListAdapter.
+	 */
 	public class CategoryList extends ArrayAdapter<String> {
 		
+		// NOTE: Static icons for the categories. Might change to dynamic in production
 		private final int icons[] = {
 			R.drawable.food,
 			R.drawable.accomd,
@@ -73,30 +81,47 @@ public class Category extends ListActivity{
 			R.drawable.site,
 			R.drawable.categories
 		};
-		public CategoryList(Context context, int textViewResourceId,
-				String[] objects) {
+
+		public CategoryList(Context context, int textViewResourceId, String[] objects) {
 			super(context, textViewResourceId, objects);
 		}
+
+		/**
+		 * Gets each row and displays the necessary data accordingly
+		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			LayoutInflater li = getLayoutInflater();
+			// Each row is a view from main_cat_list_item.xml
 			View row = li.inflate(R.layout.main_cat_list_item, parent, false);
+
 			TextView label = (TextView)row. findViewById(R.id.main_cat_list_item_label);
 			ImageView icon = (ImageView)row. findViewById(R.id.main_cat_list_item_icon);
 			
-			String name = categories.get(position).get(KEY_NAME);
-			label.setText(name);
+			label.setText(categories.get(position).get(KEY_NAME));
+
+			// NOTE: Static icons are set here
 			if(position <= icons.length-1)
 				icon.setImageDrawable(getResources().getDrawable(icons[position]));
-			else
+			else // set default icon
 				icon.setImageDrawable(getResources().getDrawable(icons[icons.length]));
 			
 			return row;
 		}
 	}
 	
+	/**
+	 * Defines the Asynchronous Task to handle a new thread for network access
+	 */
 	private class DownloadXMLTask extends AsyncTask<String, Void, String[]> {
 		private String[] result = null;
+
+		@Override
+		protected void onPreExecute()
+		{
+			// TODO: Show progress bar while loading data online
+			Log.i("onPreExucute", "Show progress bar");
+		}
 
 		@Override
 		protected String[] doInBackground(String... params) {
@@ -107,15 +132,13 @@ public class Category extends ListActivity{
 			XMLParser parser = new XMLParser();
 			xml = parser.getXmlFromUrl(url);
 
-			if (xml == null) {
+			if (xml == null) { // Most probably because of a network fault
 				cancel(false);
 				return result;
 			}
 			
-			hasInternet = true;
 			doc = parser.getDomElement(xml);
 			
-			parser = new XMLParser();
 			NodeList nodes = doc.getElementsByTagName(KEY_ITEM);
 			for(int i = 0; i < nodes.getLength(); i++){
 				
@@ -137,7 +160,7 @@ public class Category extends ListActivity{
 		
 		@Override
 		protected void onCancelled(String[] result) {
-			Log.i("Cancelled", "ya");
+			Log.w("XMLParsing", "Failed to parse on ");
 			if (result == null)
 			{
 				Toast toast = new Toast(getApplicationContext());
@@ -149,6 +172,8 @@ public class Category extends ListActivity{
 		@Override
 		protected void onPostExecute(String[] result)
 		{
+			Log.i("onPostExecute", "Hide progress bar");
+			// hide the progress bar
 			setListAdapter(new CategoryList(getApplicationContext(), R.layout.category, result));
 		}
 	}

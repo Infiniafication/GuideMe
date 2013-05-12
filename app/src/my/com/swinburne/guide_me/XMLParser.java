@@ -22,11 +22,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
-import android.widget.Toast;
 
 public class XMLParser {
 	
 	//Get the xml file from the provided URL
+	@SuppressWarnings("finally")
 	public String getXmlFromUrl(String url) {
         String xml = null;
  

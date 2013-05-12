@@ -23,11 +23,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-// TODO: DO a real proper algorithm of searching 
-public class SearchableActivity extends ListActivity {
-	
-	
 
+public class SearchableActivity extends ListActivity {
+
+	// The keys for the hashmap that stores the data of each item
 	private static final String KEY_ITEM = "item"; // parent node
 	private static final String KEY_NAME = "Name";
 	private static final String KEY_LOC ="Location";
@@ -40,14 +39,18 @@ public class SearchableActivity extends ListActivity {
 	private static final String KEY_WEB ="Website";
 	private static final String KEY_EMAIL ="Email";
 	
+	// URL is unique to each category. 
 	private String URL;
 
-	private String Name = "";
+	// The sub-category arraylist of hashmaps.
+	// Each hashmap stores each sub-category and it's details.
 	private ArrayList<HashMap<String, String>> subcats;
-	private String [] result = null;
+	
+	// Array of String of the list
+	private String[] result = null;
+	
 	private String query;
 	private ArrayList<String> info;
-	private static Toast toast;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,22 +87,26 @@ public class SearchableActivity extends ListActivity {
 	}
 	
 	private void init() {
-		Intent i = getIntent();
 		subcats = new ArrayList<HashMap<String,String>>();		
 	}
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		
 		super.onListItemClick(l, v, position, id);
 
 		Intent i = new Intent(getApplicationContext(), Details.class);
-		ArrayList<String> info = new ArrayList<String>();
+		info = new ArrayList<String>();
 		info.add(result[position]);
 		i.putStringArrayListExtra("info", info);
 		startActivity(i);
 		
 		
 	}
+
+	/**
+	 * SubCategoryList defines the customListAdapter
+	 */
 	public class SubCategoryList extends ArrayAdapter<String> {
 		int rand;
 		public SubCategoryList(Context context, int textViewResourceId,	String[] objects) {
@@ -129,12 +136,11 @@ public class SearchableActivity extends ListActivity {
 			XMLParser parser = new XMLParser();
 			String xml = parser.getXmlFromUrl(params[0]);
 
-			if (xml == null) {		
-				Toast toast = new Toast(getApplicationContext());
-				toast = Toast.makeText(getApplicationContext(), "Something went wrong with your network.", Toast.LENGTH_LONG);
-				toast.show();		
-				cancel(true);
+			if (xml == null) { // Most probably because of a network fault
+				cancel(false);
+				return result;
 			}
+
 			Document doc = parser.getDomElement(xml);
 			
 			NodeList nl = doc.getElementsByTagName(KEY_ITEM);
@@ -150,6 +156,8 @@ public class SearchableActivity extends ListActivity {
 				map.put(KEY_CONT, parser.getValue(e, KEY_CONT));
 				map.put(KEY_LONG, parser.getValue(e, KEY_LONG));
 				map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
+				map.put(KEY_WEB, parser.getValue(e, KEY_WEB));
+				map.put(KEY_EMAIL, parser.getValue(e, KEY_EMAIL));
 				subcats.add(map);
 			}
 
@@ -160,10 +168,11 @@ public class SearchableActivity extends ListActivity {
 				searchList += subcats.get(i).get(KEY_LOC) + " ";
 				searchList += subcats.get(i).get(KEY_DESC) + " ";
 
-				if (searchList.toLowerCase().trim().indexOf(query.toLowerCase().trim()) != -1) {
+				if (searchList.toLowerCase().replaceAll("\\s","").indexOf(query.toLowerCase().replaceAll("\\s","")) != -1) {
 					objects.add(subcats.get(i).get(KEY_NAME));
-					searchList = "";
 				}
+
+				searchList = "";
 			}
 			
 			result = new String[objects.size()];
@@ -173,6 +182,17 @@ public class SearchableActivity extends ListActivity {
 			}
 
 			return result;
+		}
+
+		@Override
+		protected void onCancelled(String[] result) {
+			Log.w("XMLParsing", "Failed to parse on ");
+			if (result == null)
+			{
+				Toast toast = new Toast(getApplicationContext());
+				toast = Toast.makeText(getApplicationContext(), "Something went wrong with your network.", Toast.LENGTH_LONG);
+				toast.show();
+			}
 		}
 
 		@Override

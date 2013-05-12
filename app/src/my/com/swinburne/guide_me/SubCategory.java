@@ -2,7 +2,6 @@ package my.com.swinburne.guide_me;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,15 +18,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SubCategory extends ListActivity{
+
+	// The keys for the hashmap that stores the data of each item
 	private static final String KEY_ITEM = "item"; // parent node
 	private static final String KEY_NAME = "Name";
 	private static final String KEY_URL = "url";
@@ -40,13 +41,23 @@ public class SubCategory extends ListActivity{
 	private static final String KEY_LAT ="Latitude";
 	private static final String KEY_WEB ="Website";
 	private static final String KEY_EMAIL ="Email";
+
 	private static String URL = "";
 
-	private String Name = "";
+	private String name = "";
 	private ArrayList<HashMap<String, String>> subcats;
 	private ArrayList<String> info;
-	private String [] objects;
 	private SearchView searchView;
+
+	/** 
+     * Class Static Method to get the URL passed from previous intent
+     * Used by searchableActivity
+     */
+    public static String getURL()
+    {
+    	return SubCategory.URL;
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,8 +67,12 @@ public class SubCategory extends ListActivity{
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		// get URL depending on the category name from previous intent
 		URL = getIntent().getStringExtra(KEY_URL);
-		new DownloadXMLTask().execute(this.URL);
+
+		// Run network related task on a new thread
+		new DownloadXMLTask().execute(SubCategory.URL);
 	}
 
 	@Override
@@ -79,6 +94,7 @@ public class SubCategory extends ListActivity{
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
+		// NOTE: Should use parcelable and pass a whole object with these attributes
     	Intent i = new Intent(getApplicationContext(), Details.class);
     	info = new ArrayList<String>();
 		try{
@@ -137,24 +153,25 @@ public class SubCategory extends ListActivity{
 
     }
 
-    public static String getURL()
-    {
-    	return SubCategory.URL;
-    }
-
 	private void init() {
 		Intent i = getIntent();
-		this.Name = i.getStringExtra(KEY_NAME);
-		setTitle(this.Name);
+		this.name = i.getStringExtra(KEY_NAME);
+		setTitle(this.name);
 		subcats = new ArrayList<HashMap<String,String>>();
 		
 	}
 
+	/**
+	 * SubCategoryList defines the customListAdapter for the listView
+	 */
 	public class SubCategoryList extends ArrayAdapter<String> {
 		public SubCategoryList(Context context, int textViewResourceId,	String[] objects) {
 			super(context, textViewResourceId, objects);
-			
 		}
+
+		/**
+		 * Defines the layout for each row in the listView
+		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
 			LayoutInflater li = getLayoutInflater();
@@ -170,22 +187,25 @@ public class SubCategory extends ListActivity{
 		}
 	}
 	
-	private class DownloadXMLTask extends AsyncTask<String, Void, Document> {
+	/**
+	 * The Asynchronous Task that runs a new thread to retrieve data online
+	 */ 
+	private class DownloadXMLTask extends AsyncTask<String, Void, String[]> {
+		private String[] result = null;
 
 		@Override
-		protected Document doInBackground(String... params) {
+		protected String[] doInBackground(String... params) {
 			XMLParser parser = new XMLParser();
 			String xml = parser.getXmlFromUrl(params[0]);
+
+			if (xml == null) { // Most probably because of a network fault
+				cancel(false);
+				return result;
+			}
+
 			Document doc = parser.getDomElement(xml);
 			
-			return doc;
-		}
-		
-		@Override
-		protected void onPostExecute(Document result)
-		{
-			XMLParser parser = new XMLParser();
-			NodeList nl = result.getElementsByTagName(KEY_ITEM);
+			NodeList nl = doc.getElementsByTagName(KEY_ITEM);
 			
 			for(int i = 0; i < nl.getLength(); i++){
 				HashMap<String, String> map = new HashMap<String, String>();
@@ -200,12 +220,30 @@ public class SubCategory extends ListActivity{
 				map.put(KEY_LAT, parser.getValue(e, KEY_LAT));
 				subcats.add(map);
 			}
-			objects = new String[subcats.size()];
+			result = new String[subcats.size()];
 			for(int i = 0; i < subcats.size(); i++){
-				objects[i] = subcats.get(i).get(KEY_NAME);
+				result[i] = subcats.get(i).get(KEY_NAME);
 			}
-			
-			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, objects));
+
+			return result;
+		}
+		
+		@Override
+		protected void onCancelled(String[] result) {
+			Log.w("XMLParsing", "Failed to parse on ");
+			if (result == null)
+			{
+				Toast toast = new Toast(getApplicationContext());
+				toast = Toast.makeText(getApplicationContext(), "Something went wrong with your network.", Toast.LENGTH_LONG);
+				toast.show();
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String[] result)
+		{	
+			// After doInBackground(), this is the only function that runs on the UI thread	
+			setListAdapter(new SubCategoryList(getApplicationContext(), R.layout.category, result));
 		}
 		
 	}

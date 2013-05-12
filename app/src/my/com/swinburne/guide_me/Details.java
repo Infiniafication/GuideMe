@@ -53,16 +53,30 @@ public class Details extends Activity{
 
 	public void testMapping(View v)
 	{
-		// String uri = "geo:1.556895,110.35487?z=21";
+		GPSTracker gps = new GPSTracker(Details.this);
+		double source_lat = 0;
+		double source_long = 0;
+
+		// check if GPS enabled     
+        if(gps.canGetLocation())
+        {
+            source_lat = gps.getLatitude();
+            source_long = gps.getLongitude();
+        }
+        else
+        {
+	        // can't get location
+	        // GPS or Network is not enabled
+	        // Ask user to enable GPS/network in settings
+	        gps.showSettingsAlert();
+	    }
+	    // TODO: Make static destination routes dynamic
 		String dest_lat = "1.556895";
 		String dest_long = "110.35487";
-		String source_lat = "1.556995";
-		String source_long = "110.35489";
+
+		// TODO: Change the mode to WALKING mode from current driving mode
 		String uri = "http://maps.google.com/maps?daddr="+dest_lat+","+dest_long+"&saddr="+source_lat+","+source_long;
-		// String uri = "google.navigation:ll=" + dest_lat + "," + dest_long + "&mode=w";
-		
 		Intent i = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
-		// i.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
 		i.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
 		startActivity(i);
 	}

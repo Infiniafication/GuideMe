@@ -181,7 +181,34 @@ public class SubCategory extends ListActivity{
 			
 			label.setText(subcats.get(position).get(KEY_NAME));
 			
-			icon.setImageDrawable(getResources().getDrawable(R.drawable.magnolia));
+			// NOTE: Static icons to be changed in the future to dynamic
+			if (URL.indexOf("resturants.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_food2));				
+			}
+			else if (URL.indexOf("accomodation.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_hotel));
+			}
+			else if (URL.indexOf("commercial%20centers.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_hotel));
+			}
+			else if (URL.indexOf("Financial%20Institutions.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_money));
+			}
+			else if (URL.indexOf("convenience%20store.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_store));
+			}
+			else if (URL.indexOf("Laundry%20Service.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_laundry));
+			}
+			else if (URL.indexOf("nightspots.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_night));
+			}
+			else if (URL.indexOf("tourist%20attraction.xml") != -1) {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_site));
+			}
+			else {
+				icon.setImageDrawable(getResources().getDrawable(R.drawable.icon_food));
+			}
 			
 			return row;
 		}

@@ -125,18 +125,21 @@ public class Category extends ListActivity{
 
 		@Override
 		protected String[] doInBackground(String... params) {
+			Log.i("doInBackground", "Getting data");
 			String url = params[0];
-			String xml = "";
+			String xml = null;
 			Document doc = null;
 			
 			XMLParser parser = new XMLParser();
 			xml = parser.getXmlFromUrl(url);
 
 			if (xml == null) { // Most probably because of a network fault
+				Log.e("doInBackground", "XML Error");
 				cancel(false);
 				return result;
 			}
 			
+			Log.i("doInBackground", "Got XML");
 			doc = parser.getDomElement(xml);
 			
 			NodeList nodes = doc.getElementsByTagName(KEY_ITEM);
@@ -146,7 +149,8 @@ public class Category extends ListActivity{
 				Element el = (Element) nodes.item(i);
 				urlObject.put(KEY_NAME, parser.getValue(el, KEY_NAME));
 				urlObject.put(KEY_URL, parser.getValue(el, KEY_URL));
-				
+				Log.i(KEY_NAME, parser.getValue(el, KEY_NAME));
+				Log.i(KEY_URL, parser.getValue(el, KEY_URL));
 				categories.add(new HashMap<String, String>(urlObject));
 			}
 

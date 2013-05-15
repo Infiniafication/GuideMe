@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -101,7 +102,6 @@ public class Maps extends Activity{
         	Log.d("Your Location", "Unavailable");
         }
         gps.getLocation();
-		map.addMarker(new MarkerOptions().position(new LatLng(gps.getLatitude() , gps.getLongitude())).title("Marker"));
 		
 		map.setMyLocationEnabled(true);
 	}
@@ -136,8 +136,8 @@ public class Maps extends Activity{
 				map.addMarker(new MarkerOptions().position(new LatLng(1.558246, 110.345922)).title("Mr. D's Bed & Breakfast").snippet("Accomodation").icon(BitmapDescriptorFactory.defaultMarker(328)));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.558568, 110.345611)).title("Backpacker's Stay").snippet("Accomodation").icon(BitmapDescriptorFactory.defaultMarker(328)));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.559373, 110.346024)).title("Rafflesia Lodge").snippet("Accomodation").icon(BitmapDescriptorFactory.defaultMarker(328)));
-
-				map.addMarker(new MarkerOptions().position(new LatLng(1.558190, 110.343938)).title("Plaza Merdeka").snippet("Commercial Center").icon(BitmapDescriptorFactory.defaultMarker(192)));
+                
+				map.addMarker(new MarkerOptions().position(new LatLng(1.558190, 110.343938)).title("Plaza Merdeka").snippet("Commercial Center").icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.star))));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.558086, 110.351570)).title("Riverside Shopping Complex").snippet("Commercial Center").icon(BitmapDescriptorFactory.defaultMarker(192)));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.555946, 110.351104)).title("Hills Shopping Mall").snippet("Commercial Center").icon(BitmapDescriptorFactory.defaultMarker(192)));
 				map.addMarker(new MarkerOptions().position(new LatLng(1.557732, 110.353480)).title("Sarawak Plaza Shopping Complex").snippet("Commercial Center").icon(BitmapDescriptorFactory.defaultMarker(192)));

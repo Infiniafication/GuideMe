@@ -21,9 +21,6 @@ public class Details extends Activity{
 		init();
 	}
 	private void init() {
-		// name = (TextView) findViewById(R.id.details_name);
-		// address = (TextView) findViewById(R.id.details_address);
-		// others = (TextView) findViewById(R.id.details_others);
 		
 		ImageView imageView = (ImageView) findViewById(R.id.imageView1);
 		ImageButton map_btn = (ImageButton) findViewById(R.id.map_btn);
@@ -42,15 +39,9 @@ public class Details extends Activity{
 		else if (name.equals("Green Hill Cornor")) {
 			imageView.setImageDrawable(getResources().getDrawable(R.drawable.green_hill));
 		}
-
-		// address.setText(info.get(1));
-		// String g = "";
-		// for(int j = 2; j < info.size(); j++){
-		// 	g += info.get(j) + "\n";
-		// }
-		// others.setText(g);
 	}
 
+	// Called when the map button is clicked on the detail page
 	public void testMapping(View v)
 	{
 		GPSTracker gps = new GPSTracker(Details.this);

@@ -29,7 +29,7 @@ public class XMLParser {
 	@SuppressWarnings("finally")
 	public String getXmlFromUrl(String url) {
         String xml = null;
- 
+        Log.i("XMLParser", "getting xml from url");
         try {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
